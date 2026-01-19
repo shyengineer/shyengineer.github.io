@@ -1,12 +1,9 @@
-baseURL = 'https://shyengineer.github.io/'
-languageCode = 'ko-kr'
-title = '개발·물리·경제 블로그'
-theme = 'PaperMod'
-
+baseURL = "https://shyengineer.github.io/"
+languageCode = "ko-kr"
+title = "개발·물리·경제 블로그"
+theme = "PaperMod"
 
 [params]
-    env = 'development'
     math = true
-    # 메인 페이지에 글 목록을 띄우는 설정
     showFullContents = false
     displayFullContent = false
