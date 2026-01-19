@@ -1,4 +1,6 @@
 baseURL = "https://shyengineer.github.io/"
+
+
 languageCode = "ko-kr"
 title = "개발·물리·경제 블로그"
 theme = "PaperMod"
