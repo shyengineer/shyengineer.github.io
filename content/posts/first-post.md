@@ -93,6 +93,38 @@ int main() {
     return 0;
 }
 ```
+```arduino
+┌────────────────────────┐
+│        Vector2D        │
+├────────────────────────┤
+│ + x : double           │
+│ + y : double           │
+├────────────────────────┤
+│ + operator+(v) : Vector2D │
+│ + operator*(scalar) : Vector2D │
+│ + operator+=(v) : void │
+└────────────────────────┘
+
+
+┌────────────────────────┐
+│        Particle        │
+├────────────────────────┤
+│ - position : Vector2D  │
+│ - velocity : Vector2D  │
+│ - acceleration : Vector2D │
+│ - mass : double        │
+├────────────────────────┤
+│ + Particle(pos, m)     │
+│ + applyForce(force) : void │
+│ + update(deltaTime) : void │
+│ + display() : void    │
+└────────────────────────┘
+            ▲
+            │ (has-a)
+            │
+        Vector2D
+```
+
 ## 4. 객체지향 설계의 핵심 포인트
 캡슐화: position과 velocity를 private으로 두어 외부에서 직접 수정하는 것을 막았습니다. 오직 applyForce와 update를 통해서만 물리적 법칙에 따라 이동합니다.
 
@@ -102,5 +134,6 @@ int main() {
 이러한 **에이전트 기반 모델링(ABM)**은 경제학에서도 유용합니다. '입자'를 '가계'나 '기업'으로 바꾸고, '힘'을 '시장 이자율'이나 '소비 심리'로 치환하면 복잡한 경제 시스템을 시뮬레이션할 수 있는 기초가 됩니다.
 
 다음 포스팅에서는 이 구조를 바탕으로 **상속(Inheritance)**을 이용해 다양한 물리적 성질을 가진 객체들을 만들어 보겠습니다.
-##  궁금한 점이 있으신가요?
+
+## 💡 궁금한 점이 있으신가요?
 C++ 설계 패턴이나 물리 시뮬레이션 구현 중 어려운 부분이 있다면 댓글로 남겨주세요!
