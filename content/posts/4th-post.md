@@ -1,6 +1,6 @@
 ---
 title: "C++ 팩토리 패턴(Factory Pattern): 객체 생성을 담당하는 스마트한 공장 세우기!!"
-date: 2026-01-21
+date: 2026-01-23
 categories: [Programming, Design Patterns]
 tags: [C++, OOP, FactoryPattern, DesignPatterns, Simulation]
 math: true

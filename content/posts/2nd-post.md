@@ -1,6 +1,6 @@
 ---
 title: "C++ 상속(Inheritance)으로 확장하는 물리 엔진: 다양한 물리 객체 구현하기"
-date: 2026-01-22
+date: 2026-01-21
 categories: [Programming, Physics]
 tags: [C++, OOP, Inheritance, PhysicsEngine, Simulation]
 math: true
