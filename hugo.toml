@@ -10,7 +10,28 @@ theme = "PaperMod"
     description = "물리학과 경제학을 공부하는 엔지니어의 기록입니다." # 검색 결과 설명
     author = "ShyEngineer"
     googleAnalytics = "G-672600DYET" # 여기에 받은 ID를 넣으세요!!
+    ShowCodeCopyButtons = true
     
     [params.homeInfoParams]
         Title = "반갑습니다! 👋"
         Content = "물리, 경제, 그리고 개발 이야기를 다룹니다."
+
+    [params.label]
+        text = "Shy Engineer"
+        icon = "/Logo.webp"
+        iconHeight = 35
+
+    [params.profileMode]
+    enabled = true
+    title = "안녕하세요! 수줍은 엔지니어입니다! 👋"
+    subtitle = "물리 시뮬레이션과 경제학을 사랑하는 개발자 블로그입니다!!"
+    # imageUrl = "https://github.com/본인아이디.png" 깃허브 프로필 사진 활용!!
+    imageTitle = "Profile Image"
+    imageWidth = 150
+    imageHeight = 150
+    [[params.profileMode.buttons]]
+        name = "모든 포스트 보기"
+        url = "posts"
+    [[params.profileMode.buttons]]
+        name = "태그별 찾기"
+        url = "tags"
