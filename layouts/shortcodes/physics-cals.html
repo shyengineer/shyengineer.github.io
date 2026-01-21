@@ -1,0 +1,46 @@
+<div style="border: 2px solid #007bff; padding: 20px; border-radius: 10px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3 style="color: #007bff; margin-top: 0;">🚀 실시간 F=ma 시뮬레이터</h3>
+    
+    <div style="margin-bottom: 10px;">
+        <label>힘 (Force, N): </label>
+        <input type="number" id="force" value="10" style="width: 60px;">
+    </div>
+    <div style="margin-bottom: 10px;">
+        <label>질량 (Mass, kg): </label>
+        <input type="number" id="mass" value="2" style="width: 60px;">
+    </div>
+    
+    <button onclick="calculate()" style="background-color: #007bff; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">계산 및 실행!!</button>
+
+    <div style="margin-top: 20px;">
+        <strong>결과 가속도: <span id="accel-res">5</span> m/s²</strong>
+    </div>
+
+    <div id="stage" style="width: 100%; height: 100px; background: #eee; margin-top: 20px; position: relative; overflow: hidden; border-radius: 5px;">
+        <div id="box" style="width: 40px; height: 40px; background: red; position: absolute; top: 30px; left: 0;"></div>
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const f = document.getElementById('force').value;
+    const m = document.getElementById('mass').value;
+    const a = f / m;
+    
+    document.getElementById('accel-res').innerText = a.toFixed(2);
+    
+    // 애니메이션 초기화 및 실행!!
+    const box = document.getElementById('box');
+    let pos = 0;
+    let vel = 0;
+    const interval = setInterval(() => {
+        if (pos > 500) {
+            clearInterval(interval);
+        } else {
+            vel += a * 0.1; // 단순화된 가속도 운동
+            pos += vel;
+            box.style.left = pos + 'px';
+        }
+    }, 20);
+}
+</script>

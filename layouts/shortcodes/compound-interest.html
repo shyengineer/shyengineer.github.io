@@ -1,0 +1,53 @@
+<div style="border: 2px solid #28a745; padding: 25px; border-radius: 15px; margin: 25px 0; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h3 style="color: #28a745; margin-top: 0; text-align: center;">💰 복리의 마법 계산기</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">초기 투자금 (원)</label>
+            <input type="number" id="principal" value="1000000" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">연이율 (%)</label>
+            <input type="number" id="rate" value="5" step="0.1" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">투자 기간 (년)</label>
+            <input type="number" id="years" value="10" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">월 추가 적립금 (원)</label>
+            <input type="number" id="monthly" value="100000" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+    </div>
+    
+    <button onclick="calculateInterest()" style="width: 100%; background-color: #28a745; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;">결과 확인하기!! ✨</button>
+
+    <div id="result-area" style="margin-top: 25px; padding: 15px; background-color: #f1f8e9; border-radius: 10px; display: none;">
+        <p style="margin: 5px 0;">최종 예상 금액: <span id="total-val" style="font-size: 20px; font-weight: bold; color: #2e7d32;">0</span>원</p>
+        <p style="margin: 5px 0; font-size: 14px; color: #666;">총 원금: <span id="principal-val">0</span>원 / 총 이자: <span id="interest-val">0</span>원</p>
+    </div>
+</div>
+
+<script>
+function calculateInterest() {
+    const P = parseFloat(document.getElementById('principal').value);
+    const r = parseFloat(document.getElementById('rate').value) / 100 / 12; // 월이율
+    const t = parseFloat(document.getElementById('years').value) * 12; // 총 개월수
+    const PMT = parseFloat(document.getElementById('monthly').value);
+
+    // 복리 공식 (거치금 + 적립금)
+    // A = P(1+r)^t + PMT * [((1+r)^t - 1) / r]
+    const compoundP = P * Math.pow(1 + r, t);
+    const compoundPMT = PMT * (Math.pow(1 + r, t) - 1) / r;
+    const total = compoundP + compoundPMT;
+    
+    const totalPrincipal = P + (PMT * t);
+    const totalInterest = total - totalPrincipal;
+
+    document.getElementById('total-val').innerText = Math.round(total).toLocaleString();
+    document.getElementById('principal-val').innerText = Math.round(totalPrincipal).toLocaleString();
+    document.getElementById('interest-val').innerText = Math.round(totalInterest).toLocaleString();
+    
+    document.getElementById('result-area').style.display = 'block';
+}
+</script>

@@ -9,6 +9,7 @@ theme = "PaperMod"
     displayFullContent = false
     description = "물리학과 경제학을 공부하는 엔지니어의 기록입니다." # 검색 결과 설명
     author = "ShyEngineer"
+    googleAnalytics = "G-672600DYET" # 여기에 받은 ID를 넣으세요!!
     
     [params.homeInfoParams]
         Title = "반갑습니다! 👋"

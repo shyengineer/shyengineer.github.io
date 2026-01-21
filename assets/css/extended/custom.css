@@ -1,0 +1,15 @@
+/* 전체 폰트 크기 및 줄간격 조정 (가독성 향상!!) */
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    line-height: 1.8;
+}
+
+/* 강조색 변경 (수익형 블로그의 신뢰감을 주는 파란색/초록색) */
+:root {
+    --highlight: #28a745; 
+}
+
+/* 다크 모드일 때 코드 배경색 살짝 더 어둡게!! */
+.dark {
+    --code-bg: #1e1e1e;
+}
