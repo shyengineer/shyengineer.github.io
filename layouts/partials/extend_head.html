@@ -1,6 +1,8 @@
 {{- if not .Site.IsServer }}
 {{ template "_internal/google_analytics.html" . }}
 {{- end }}
+
+<link rel="icon" href="/favicon.ico">
 {{ if .Params.math }}{{ partial "math.html" . }}{{ end }}
 <meta name="google-site-verification" content="571yNf6jh4xoCUkecpp1fEH-SQAmvqhr6pukc2cmkbY" />
 <link rel="icon" href="/favicon.ico">
