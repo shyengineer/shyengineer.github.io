@@ -1,6 +1,6 @@
-{{- if not .Site.IsServer }}
+{{- if (not hugo.IsServer) -}}
 {{ template "_internal/google_analytics.html" . }}
-{{- end }}
+{{- end -}}
 
 <link rel="icon" href="/favicon.ico">
 {{ if .Params.math }}{{ partial "math.html" . }}{{ end }}
