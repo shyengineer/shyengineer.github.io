@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>FactoryPattern on 개발·물리·경제 블로그</title>
+    <link>https://shyengineer.github.io/tags/factorypattern/</link>
+    <description>Recent content in FactoryPattern on 개발·물리·경제 블로그</description>
+    <generator>Hugo -- 0.154.5</generator>
+    <language>ko-kr</language>
+    <lastBuildDate>Fri, 23 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://shyengineer.github.io/tags/factorypattern/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43; 팩토리 패턴(Factory Pattern): 객체 생성을 담당하는 스마트한 공장 세우기!!</title>
+      <link>https://shyengineer.github.io/posts/4th-post/</link>
+      <pubDate>Fri, 23 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://shyengineer.github.io/posts/4th-post/</guid>
+      <description>수많은 물리 객체를 일일이 직접 만들고 계신가요? 이제 팩토리 패턴을 통해 객체 생성 로직을 깔끔하게 분리하고 관리를 자동화해 봅시다!!</description>
+    </item>
+  </channel>
+</rss>

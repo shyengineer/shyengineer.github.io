@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Virtual on 개발·물리·경제 블로그</title>
+    <link>https://shyengineer.github.io/tags/virtual/</link>
+    <description>Recent content in Virtual on 개발·물리·경제 블로그</description>
+    <generator>Hugo -- 0.154.5</generator>
+    <language>ko-kr</language>
+    <lastBuildDate>Thu, 22 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://shyengineer.github.io/tags/virtual/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43;의 마법, virtual과 override 이해하기: 부모의 유산을 지혜롭게 물려받는 방법!!</title>
+      <link>https://shyengineer.github.io/posts/3rd-post/</link>
+      <pubDate>Thu, 22 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://shyengineer.github.io/posts/3rd-post/</guid>
+      <description>상속을 제대로 활용하기 위해 반드시 알아야 할 virtual과 override! 부모 클래스의 기능을 자식이 어떻게 멋지게 재정의하는지 친절하게 설명해 드릴게요!!</description>
+    </item>
+  </channel>
+</rss>

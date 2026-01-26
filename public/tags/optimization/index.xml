@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Optimization on 개발·물리·경제 블로그</title>
+    <link>https://shyengineer.github.io/tags/optimization/</link>
+    <description>Recent content in Optimization on 개발·물리·경제 블로그</description>
+    <generator>Hugo -- 0.154.5</generator>
+    <language>ko-kr</language>
+    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://shyengineer.github.io/tags/optimization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43; 성능의 한계를 돌파하라: 공간 분할(Spatial Partitioning)로 수만 개의 입자 다루기!!</title>
+      <link>https://shyengineer.github.io/posts/7th-post/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://shyengineer.github.io/posts/7th-post/</guid>
+      <description>입자가 늘어날수록 급격히 느려지는 시뮬레이션! 모든 객체를 일일이 대조하지 않고, 필요한 영역만 효율적으로 탐색하는 공간 분할 기법의 마법을 공개합니다!!</description>
+    </item>
+    <item>
+      <title>C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!</title>
+      <link>https://shyengineer.github.io/posts/6th-post/</link>
+      <pubDate>Sun, 25 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://shyengineer.github.io/posts/6th-post/</guid>
+      <description>싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!</description>
+    </item>
+  </channel>
+</rss>

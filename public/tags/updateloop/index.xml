@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>UpdateLoop on 개발·물리·경제 블로그</title>
+    <link>https://shyengineer.github.io/tags/updateloop/</link>
+    <description>Recent content in UpdateLoop on 개발·물리·경제 블로그</description>
+    <generator>Hugo -- 0.154.5</generator>
+    <language>ko-kr</language>
+    <lastBuildDate>Sun, 25 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://shyengineer.github.io/tags/updateloop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!</title>
+      <link>https://shyengineer.github.io/posts/6th-post/</link>
+      <pubDate>Sun, 25 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://shyengineer.github.io/posts/6th-post/</guid>
+      <description>싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!</description>
+    </item>
+  </channel>
+</rss>

@@ -3,15 +3,23 @@ languageCode = "ko-kr"
 title = "개발·물리·경제 블로그"
 theme = "PaperMod"
 
+# 검색 기능 활성화를 위한 출력 설정
+[outputs]
+    home = ["HTML", "RSS", "JSON"]
+
 [params]
+    # [수정] 수식(LaTeX) 및 검색 기능 활성화
     math = true
     showFullContents = false
     displayFullContent = false
-    description = "물리학과 경제학을 공부하는 엔지니어의 기록입니다." # 검색 결과 설명
+    description = "물리학과 경제학을 공부하는 엔지니어의 기록입니다."
     author = "ShyEngineer"
-    googleAnalytics = "G-672600DYET" # 여기에 받은 ID를 넣으세요!!
+    googleAnalytics = "G-672600DYET"
     ShowCodeCopyButtons = true
     
+    # [추가] 검색창 사용 설정 (Ctrl + / 로 검색 가능)
+    ShowSearchButton = true
+
     [params.homeInfoParams]
         Title = "반갑습니다! 👋"
         Content = "물리, 경제, 그리고 개발 이야기를 다룹니다."
@@ -22,16 +30,25 @@ theme = "PaperMod"
         iconHeight = 35
 
     [params.profileMode]
-    enabled = true
-    title = "안녕하세요! 수줍은 엔지니어입니다! 👋"
-    subtitle = "물리 시뮬레이션과 경제학을 사랑하는 개발자 블로그입니다!!"
-    # imageUrl = "https://github.com/본인아이디.png" 깃허브 프로필 사진 활용!!
-    imageTitle = "Profile Image"
-    imageWidth = 150
-    imageHeight = 150
-    [[params.profileMode.buttons]]
-        name = "모든 포스트 보기"
-        url = "posts"
-    [[params.profileMode.buttons]]
-        name = "태그별 찾기"
-        url = "tags"
+        enabled = true # 프로필 모드 사용 여부 (메인 화면)
+        title = "안녕하세요! 수줍은 엔지니어입니다! 👋"
+        subtitle = "물리 시뮬레이션과 경제학을 사랑하는 개발자 블로그입니다!!"
+        # imageUrl = "https://github.com/shyengineer.png" # 깃허브 사진 연동 시 주석 해제
+        imageTitle = "Profile Image"
+        imageWidth = 120
+        imageHeight = 120
+        
+        [[params.profileMode.buttons]]
+            name = "모든 포스트 보기"
+            url = "posts"
+        [[params.profileMode.buttons]]
+            name = "태그별 찾기"
+            url = "tags"
+
+    # [추가] 소셜 링크 버튼 (블로그 하단/프로필에 표시됨)
+    [[params.socialIcons]]
+        name = "github"
+        url = "https://github.com/shyengineer"
+    [[params.socialIcons]]
+        name = "email"
+        url = "mailto:본인이메일@example.com"

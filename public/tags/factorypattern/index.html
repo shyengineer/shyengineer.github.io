@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
-<title>Hello | 개발·물리·경제 블로그</title>
+<meta name="robots" content="index, follow">
+<title>FactoryPattern | 개발·물리·경제 블로그</title>
 <meta name="keywords" content="">
-<meta name="description" content="안녕하세요!
-블로그 테스트 중입니다.
-$E = mc^2$ 수식도 잘 나오나요?">
-<meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/hello/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="description" content="물리학과 경제학을 공부하는 엔지니어의 기록입니다.">
+<meta name="author" content="ShyEngineer">
+<link rel="canonical" href="https://shyengineer.github.io/tags/factorypattern/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7a1c9b3f623dc2a62359feb438e65a66c66c2e7b1986cf70704648693e57ec9b.css" integrity="sha256-ehybP2I9wqYjWf60OOZaZsZsLnsZhs9wcEZIaT5X7Js=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://shyengineer.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://shyengineer.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://shyengineer.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://shyengineer.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://shyengineer.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/hello/">
+<link rel="alternate" type="application/rss+xml" href="https://shyengineer.github.io/tags/factorypattern/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://shyengineer.github.io/tags/factorypattern/">
 <noscript>
     <style>
         #theme-toggle,
@@ -73,12 +72,47 @@ $E = mc^2$ 수식도 잘 나오나요?">
     }
 
 </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-672600DYET"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-672600DYET');
+</script>
+
+<link rel="icon" href="/favicon.ico">
+
+
+<meta name="google-site-verification" content="571yNf6jh4xoCUkecpp1fEH-SQAmvqhr6pukc2cmkbY" />
+
+<meta property="og:title" content="FactoryPattern | 개발·물리·경제 블로그" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shyengineer.github.io/tags/factorypattern/" />
+
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FactoryPattern" />
+<meta name="twitter:description" content="" />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" /><meta property="og:url" content="https://shyengineer.github.io/tags/factorypattern/">
+  <meta property="og:site_name" content="개발·물리·경제 블로그">
+  <meta property="og:title" content="FactoryPattern">
+  <meta property="og:description" content="물리학과 경제학을 공부하는 엔지니어의 기록입니다.">
+  <meta property="og:locale" content="ko-kr">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FactoryPattern">
+<meta name="twitter:description" content="물리학과 경제학을 공부하는 엔지니어의 기록입니다.">
+
 </head>
-<body id="top">
+<body class="list" id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="개발·물리·경제 블로그 (Alt + H)">개발·물리·경제 블로그</a>
+            <a href="https://shyengineer.github.io/" accesskey="h" title="Shy Engineer (Alt + H)">
+                <img src="https://shyengineer.github.io/Logo.webp" alt="" aria-label="logo"
+                    height="35">Shy Engineer</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -106,34 +140,28 @@ $E = mc^2$ 수식도 잘 나오나요?">
         </ul>
     </nav>
 </header>
-<main class="main">
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    FactoryPattern
+  </h1>
+</header>
 
-<article class="post-single">
-  <header class="post-header">
-    
-    <h1 class="post-title entry-hint-parent">
-      Hello
-    </h1>
-    <div class="post-meta"><span title='2026-01-18 22:04:44 +0900 KST'>January 18, 2026</span>
-
-</div>
-  </header> 
-  <div class="post-content"><h2 id="안녕하세요">안녕하세요!<a hidden class="anchor" aria-hidden="true" href="#안녕하세요">#</a></h2>
-<p>블로그 테스트 중입니다.
-$E = mc^2$ 수식도 잘 나오나요?</p>
-
-
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">C&#43;&#43; 팩토리 패턴(Factory Pattern): 객체 생성을 담당하는 스마트한 공장 세우기!!
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>수많은 물리 객체를 일일이 직접 만들고 계신가요? 이제 팩토리 패턴을 통해 객체 생성 로직을 깔끔하게 분리하고 관리를 자동화해 봅시다!!</p>
   </div>
-
-  <footer class="post-footer">
-    <ul class="post-tags">
-    </ul>
-  </footer>
+  <footer class="entry-footer"><span title='2026-01-23 00:00:00 +0000 UTC'>January 23, 2026</span>&nbsp;·&nbsp;<span>ShyEngineer</span></footer>
+  <a class="entry-link" aria-label="post link to C&#43;&#43; 팩토리 패턴(Factory Pattern): 객체 생성을 담당하는 스마트한 공장 세우기!!" href="https://shyengineer.github.io/posts/4th-post/"></a>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">개발·물리·경제 블로그</a></span> · 
+        <span>&copy; 2026 <a href="https://shyengineer.github.io/">개발·물리·경제 블로그</a></span> · 
 
     <span>
         Powered by

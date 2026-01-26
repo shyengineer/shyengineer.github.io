@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>C&#43;&#43; OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진 | 개발·물리·경제 블로그</title>
+<meta name="keywords" content="C&#43;&#43;, OOP, Simulation, PhysicsEngine">
+<meta name="description" content="C&#43;&#43;의 객체지향 원칙을 활용하여 물리 엔진의 기초가 되는 입자 시스템을 설계해 봅니다. 캡슐화와 연산자 오버로딩을 통해 유지보수가 용이한 코드를 작성하는 방법을 다룹니다.">
+<meta name="author" content="ShyEngineer">
+<link rel="canonical" href="https://shyengineer.github.io/posts/1st-post/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7a1c9b3f623dc2a62359feb438e65a66c66c2e7b1986cf70704648693e57ec9b.css" integrity="sha256-ehybP2I9wqYjWf60OOZaZsZsLnsZhs9wcEZIaT5X7Js=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://shyengineer.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://shyengineer.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://shyengineer.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://shyengineer.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://shyengineer.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://shyengineer.github.io/posts/1st-post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-672600DYET"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-672600DYET');
+</script>
+
+<link rel="icon" href="/favicon.ico">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<meta name="google-site-verification" content="571yNf6jh4xoCUkecpp1fEH-SQAmvqhr6pukc2cmkbY" />
+
+<meta property="og:title" content="C&#43;&#43; OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진 | 개발·물리·경제 블로그" />
+<meta property="og:description" content="C&#43;&#43;의 객체지향 원칙을 활용하여 물리 엔진의 기초가 되는 입자 시스템을 설계해 봅니다. 캡슐화와 연산자 오버로딩을 통해 유지보수가 용이한 코드를 작성하는 방법을 다룹니다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shyengineer.github.io/posts/1st-post/" />
+
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="C&#43;&#43; OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진" />
+<meta name="twitter:description" content="C&#43;&#43;의 객체지향 원칙을 활용하여 물리 엔진의 기초가 되는 입자 시스템을 설계해 봅니다. 캡슐화와 연산자 오버로딩을 통해 유지보수가 용이한 코드를 작성하는 방법을 다룹니다." />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" /><meta property="og:url" content="https://shyengineer.github.io/posts/1st-post/">
+  <meta property="og:site_name" content="개발·물리·경제 블로그">
+  <meta property="og:title" content="C&#43;&#43; OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진">
+  <meta property="og:description" content="C&#43;&#43;의 객체지향 원칙을 활용하여 물리 엔진의 기초가 되는 입자 시스템을 설계해 봅니다. 캡슐화와 연산자 오버로딩을 통해 유지보수가 용이한 코드를 작성하는 방법을 다룹니다.">
+  <meta property="og:locale" content="ko-kr">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-20T00:00:00+00:00">
+    <meta property="article:tag" content="C&#43;&#43;">
+    <meta property="article:tag" content="OOP">
+    <meta property="article:tag" content="Simulation">
+    <meta property="article:tag" content="PhysicsEngine">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C&#43;&#43; OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진">
+<meta name="twitter:description" content="C&#43;&#43;의 객체지향 원칙을 활용하여 물리 엔진의 기초가 되는 입자 시스템을 설계해 봅니다. 캡슐화와 연산자 오버로딩을 통해 유지보수가 용이한 코드를 작성하는 방법을 다룹니다.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://shyengineer.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "C++ OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진",
+      "item": "https://shyengineer.github.io/posts/1st-post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "C++ OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진",
+  "name": "C\u002b\u002b OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진",
+  "description": "C++의 객체지향 원칙을 활용하여 물리 엔진의 기초가 되는 입자 시스템을 설계해 봅니다. 캡슐화와 연산자 오버로딩을 통해 유지보수가 용이한 코드를 작성하는 방법을 다룹니다.",
+  "keywords": [
+    "C++", "OOP", "Simulation", "PhysicsEngine"
+  ],
+  "articleBody": "1. 왜 물리 엔진에 객체지향(OOP)이 필요한가? 물리 시뮬레이션을 구현할 때 단순히 변수와 함수의 나열로 작성하면, 입자가 수천 개로 늘어나는 순간 코드는 관리 불능 상태가 됩니다. **객체지향 프로그래밍(OOP)**은 각 물리적 실체를 하나의 ‘객체’로 정의하여 데이터와 로직을 묶어줍니다.\n특히 **캡슐화(Encapsulation)**를 통해 가속도, 속도, 위치와 같은 내부 상태를 보호하고, 정해진 메서드(update)를 통해서만 상태를 변화시키는 것이 중요합니다.\n2. 물리 법칙의 코드화: 뉴턴의 제2법칙 시뮬레이션의 핵심은 뉴턴의 운동 법칙입니다.\n$$\\vec{F} = m\\vec{a} \\implies \\vec{a} = \\frac{\\vec{F}}{m}$$\n이 물리 공식은 코드 상에서 매 프레임마다 가속도를 계산하고, 이를 통해 속도와 위치를 갱신하는 방식으로 구현됩니다.\n3. C++ 클래스 설계 (Source Code) 먼저 위치와 속도 계산을 편리하게 하기 위해 Vector2D 구조체를 정의하고, 이를 사용하는 Particle 클래스를 설계합니다.\n#include #include // 2D 벡터 구조체: 연산자 오버로딩을 통한 직관적 계산 struct Vector2D { double x, y; Vector2D operator+(const Vector2D\u0026 v) const { return {x + v.x, y + v.y}; } Vector2D operator*(double scalar) const { return {x * scalar, y * scalar}; } void operator+=(const Vector2D\u0026 v) { x += v.x; y += v.y; } }; // Particle 클래스: 캡슐화 적용 class Particle { private: Vector2D position; Vector2D velocity; Vector2D acceleration; double mass; public: Particle(Vector2D pos, double m) : position(pos), velocity({0, 0}), acceleration({0, 0}), mass(m) {} // 힘을 가하는 메서드 (F = ma) void applyForce(Vector2D force) { Vector2D a = force * (1.0 / mass); acceleration += a; } // 상태 업데이트 (오일러 적분법) void update(double deltaTime) { velocity += acceleration * deltaTime; position += velocity * deltaTime; // 가속도 초기화 (매 프레임 힘의 합력을 새로 계산하기 위함) acceleration = {0, 0}; } void display() const { std::cout \u003c\u003c \"Pos: (\" \u003c\u003c position.x \u003c\u003c \", \" \u003c\u003c position.y \u003c\u003c \")\" \u003c\u003c std::endl; } }; int main() { // 질량 1.0인 입자를 (0,0)에 생성 Particle p({0.0, 0.0}, 1.0); // 중력(가속도 개념의 힘) 적용 예시 Vector2D gravity = {0.0, -9.8}; std::cout \u003c\u003c \"--- Simulation Start ---\" \u003c\u003c std::endl; for (int i = 0; i \u003c 5; ++i) { p.applyForce(gravity); p.update(0.1); // 0.1초 단위 업데이트 p.display(); } return 0; } ┌────────────────────────┐ │ Vector2D │ ├────────────────────────┤ │ + x : double │ │ + y : double │ ├────────────────────────┤ │ + operator+(v) : Vector2D │ │ + operator*(scalar) : Vector2D │ │ + operator+=(v) : void │ └────────────────────────┘ ┌────────────────────────┐ │ Particle │ ├────────────────────────┤ │ - position : Vector2D │ │ - velocity : Vector2D │ │ - acceleration : Vector2D │ │ - mass : double │ ├────────────────────────┤ │ + Particle(pos, m) │ │ + applyForce(force) : void │ │ + update(deltaTime) : void │ │ + display() : void │ └────────────────────────┘ ▲ │ (has-a) │ Vector2D 4. 객체지향 설계의 핵심 포인트 캡슐화: position과 velocity를 private으로 두어 외부에서 직접 수정하는 것을 막았습니다. 오직 applyForce와 update를 통해서만 물리적 법칙에 따라 이동합니다.\n단일 책임 원칙 (SRP): Particle 클래스는 자신의 물리 상태를 갱신하는 역할만 수행합니다. 렌더링이나 세계(World) 관리는 별도의 클래스에 맡기는 것이 좋습니다.\n5. 마치며: 경제 모델로의 확장 이러한 **에이전트 기반 모델링(ABM)**은 경제학에서도 유용합니다. ‘입자’를 ‘가계’나 ‘기업’으로 바꾸고, ‘힘’을 ‘시장 이자율’이나 ‘소비 심리’로 치환하면 복잡한 경제 시스템을 시뮬레이션할 수 있는 기초가 됩니다.\n다음 포스팅에서는 이 구조를 바탕으로 **상속(Inheritance)**을 이용해 다양한 물리적 성질을 가진 객체들을 만들어 보겠습니다.\n💡 궁금한 점이 있으신가요? C++ 설계 패턴이나 물리 시뮬레이션 구현 중 어려운 부분이 있다면 댓글로 남겨주세요!\n",
+  "wordCount" : "526",
+  "inLanguage": "en",
+  "datePublished": "2026-01-20T00:00:00Z",
+  "dateModified": "2026-01-20T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "ShyEngineer"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://shyengineer.github.io/posts/1st-post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "개발·물리·경제 블로그",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://shyengineer.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://shyengineer.github.io/" accesskey="h" title="Shy Engineer (Alt + H)">
+                <img src="https://shyengineer.github.io/Logo.webp" alt="" aria-label="logo"
+                    height="35">Shy Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      C&#43;&#43; OOP로 구현하는 물리 시뮬레이션: 객체지향으로 설계하는 입자(Particle) 엔진
+    </h1>
+    <div class="post-meta"><span title='2026-01-20 00:00:00 +0000 UTC'>January 20, 2026</span>&nbsp;·&nbsp;<span>ShyEngineer</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-왜-물리-엔진에-객체지향oop이-필요한가">1. 왜 물리 엔진에 객체지향(OOP)이 필요한가?<a hidden class="anchor" aria-hidden="true" href="#1-왜-물리-엔진에-객체지향oop이-필요한가">#</a></h2>
+<p>물리 시뮬레이션을 구현할 때 단순히 변수와 함수의 나열로 작성하면, 입자가 수천 개로 늘어나는 순간 코드는 관리 불능 상태가 됩니다. **객체지향 프로그래밍(OOP)**은 각 물리적 실체를 하나의 &lsquo;객체&rsquo;로 정의하여 데이터와 로직을 묶어줍니다.</p>
+<p>특히 **캡슐화(Encapsulation)**를 통해 가속도, 속도, 위치와 같은 내부 상태를 보호하고, 정해진 메서드(<code>update</code>)를 통해서만 상태를 변화시키는 것이 중요합니다.</p>
+<hr>
+<h2 id="2-물리-법칙의-코드화-뉴턴의-제2법칙">2. 물리 법칙의 코드화: 뉴턴의 제2법칙<a hidden class="anchor" aria-hidden="true" href="#2-물리-법칙의-코드화-뉴턴의-제2법칙">#</a></h2>
+<p>시뮬레이션의 핵심은 뉴턴의 운동 법칙입니다.</p>
+<p>$$\vec{F} = m\vec{a} \implies \vec{a} = \frac{\vec{F}}{m}$$</p>
+<p>이 물리 공식은 코드 상에서 매 프레임마다 가속도를 계산하고, 이를 통해 속도와 위치를 갱신하는 방식으로 구현됩니다.</p>
+<hr>
+<h2 id="3-c-클래스-설계-source-code">3. C++ 클래스 설계 (Source Code)<a hidden class="anchor" aria-hidden="true" href="#3-c-클래스-설계-source-code">#</a></h2>
+<p>먼저 위치와 속도 계산을 편리하게 하기 위해 <code>Vector2D</code> 구조체를 정의하고, 이를 사용하는 <code>Particle</code> 클래스를 설계합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 2D 벡터 구조체: 연산자 오버로딩을 통한 직관적 계산
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Vector2D</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> x, y;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Vector2D <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> Vector2D<span style="color:#f92672">&amp;</span> v) <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> {x <span style="color:#f92672">+</span> v.x, y <span style="color:#f92672">+</span> v.y}; }
+</span></span><span style="display:flex;"><span>    Vector2D <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">double</span> scalar) <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> {x <span style="color:#f92672">*</span> scalar, y <span style="color:#f92672">*</span> scalar}; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+=</span>(<span style="color:#66d9ef">const</span> Vector2D<span style="color:#f92672">&amp;</span> v) { x <span style="color:#f92672">+=</span> v.x; y <span style="color:#f92672">+=</span> v.y; }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Particle 클래스: 캡슐화 적용
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Particle</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Vector2D position;
+</span></span><span style="display:flex;"><span>    Vector2D velocity;
+</span></span><span style="display:flex;"><span>    Vector2D acceleration;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> mass;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Particle(Vector2D pos, <span style="color:#66d9ef">double</span> m) 
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> position(pos), velocity({<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>}), acceleration({<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>}), mass(m) {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 힘을 가하는 메서드 (F = ma)
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">applyForce</span>(Vector2D force) {
+</span></span><span style="display:flex;"><span>        Vector2D a <span style="color:#f92672">=</span> force <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> mass);
+</span></span><span style="display:flex;"><span>        acceleration <span style="color:#f92672">+=</span> a;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 상태 업데이트 (오일러 적분법)
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">update</span>(<span style="color:#66d9ef">double</span> deltaTime) {
+</span></span><span style="display:flex;"><span>        velocity <span style="color:#f92672">+=</span> acceleration <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>        position <span style="color:#f92672">+=</span> velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 가속도 초기화 (매 프레임 힘의 합력을 새로 계산하기 위함)
+</span></span></span><span style="display:flex;"><span>        acceleration <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">display</span>() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Pos: (&#34;</span> <span style="color:#f92672">&lt;&lt;</span> position.x <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">&lt;&lt;</span> position.y <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;)&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 질량 1.0인 입자를 (0,0)에 생성
+</span></span></span><span style="display:flex;"><span>    Particle p({<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>}, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 중력(가속도 개념의 힘) 적용 예시
+</span></span></span><span style="display:flex;"><span>    Vector2D gravity <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">9.8</span>};
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;--- Simulation Start ---&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        p.applyForce(gravity);
+</span></span><span style="display:flex;"><span>        p.update(<span style="color:#ae81ff">0.1</span>); <span style="color:#75715e">// 0.1초 단위 업데이트
+</span></span></span><span style="display:flex;"><span>        p.display();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-arduino" data-lang="arduino"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">┌────────────────────────┐</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>        Vector2D        <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├────────────────────────┤</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> x : <span style="color:#66d9ef">double</span>           <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> y : <span style="color:#66d9ef">double</span>           <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├────────────────────────┤</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(v) <span style="color:#f92672">:</span> Vector2D <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(scalar) <span style="color:#f92672">:</span> Vector2D <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+=</span>(v) <span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└────────────────────────┘</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">┌────────────────────────┐</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>        Particle        <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├────────────────────────┤</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">position</span> <span style="color:#f92672">:</span> Vector2D  <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">-</span> velocity : Vector2D  <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">-</span> acceleration : Vector2D <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">-</span> mass : <span style="color:#66d9ef">double</span>        <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├────────────────────────┤</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> Particle(pos, m)     <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> applyForce(force) <span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> update(deltaTime) <span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">display</span>() <span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span>    <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└────────────────────────┘</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#960050;background-color:#1e0010">▲</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#960050;background-color:#1e0010">│</span> (has<span style="color:#f92672">-</span>a)
+</span></span><span style="display:flex;"><span>            <span style="color:#960050;background-color:#1e0010">│</span>
+</span></span><span style="display:flex;"><span>        Vector2D
+</span></span></code></pre></div><h2 id="4-객체지향-설계의-핵심-포인트">4. 객체지향 설계의 핵심 포인트<a hidden class="anchor" aria-hidden="true" href="#4-객체지향-설계의-핵심-포인트">#</a></h2>
+<p>캡슐화: position과 velocity를 private으로 두어 외부에서 직접 수정하는 것을 막았습니다. 오직 applyForce와 update를 통해서만 물리적 법칙에 따라 이동합니다.</p>
+<p>단일 책임 원칙 (SRP): Particle 클래스는 자신의 물리 상태를 갱신하는 역할만 수행합니다. 렌더링이나 세계(World) 관리는 별도의 클래스에 맡기는 것이 좋습니다.</p>
+<h2 id="5-마치며-경제-모델로의-확장">5. 마치며: 경제 모델로의 확장<a hidden class="anchor" aria-hidden="true" href="#5-마치며-경제-모델로의-확장">#</a></h2>
+<p>이러한 **에이전트 기반 모델링(ABM)**은 경제학에서도 유용합니다. &lsquo;입자&rsquo;를 &lsquo;가계&rsquo;나 &lsquo;기업&rsquo;으로 바꾸고, &lsquo;힘&rsquo;을 &lsquo;시장 이자율&rsquo;이나 &lsquo;소비 심리&rsquo;로 치환하면 복잡한 경제 시스템을 시뮬레이션할 수 있는 기초가 됩니다.</p>
+<p>다음 포스팅에서는 이 구조를 바탕으로 **상속(Inheritance)**을 이용해 다양한 물리적 성질을 가진 객체들을 만들어 보겠습니다.</p>
+<h2 id="-궁금한-점이-있으신가요">💡 궁금한 점이 있으신가요?<a hidden class="anchor" aria-hidden="true" href="#-궁금한-점이-있으신가요">#</a></h2>
+<p>C++ 설계 패턴이나 물리 시뮬레이션 구현 중 어려운 부분이 있다면 댓글로 남겨주세요!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://shyengineer.github.io/tags/c&#43;&#43;/">C&#43;&#43;</a></li>
+      <li><a href="https://shyengineer.github.io/tags/oop/">OOP</a></li>
+      <li><a href="https://shyengineer.github.io/tags/simulation/">Simulation</a></li>
+      <li><a href="https://shyengineer.github.io/tags/physicsengine/">PhysicsEngine</a></li>
+    </ul>
+  </footer>
+
+  
+  <script src="https://giscus.app/client.js"
+        data-repo="shyengineer/shyengineer.github.io"
+        data-repo-id="R_kgDOQ8g2qw"
+        data-category="[ENTER CATEGORY NAME HERE]"
+        data-category-id="[ENTER CATEGORY ID HERE]"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="ko"
+        crossorigin="anonymous"
+        async>
+</script>
+  
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://shyengineer.github.io/">개발·물리·경제 블로그</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

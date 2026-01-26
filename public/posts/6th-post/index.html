@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!! | 개발·물리·경제 블로그</title>
+<meta name="keywords" content="C&#43;&#43;, OOP, Simulation, UpdateLoop, Optimization">
+<meta name="description" content="싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!">
+<meta name="author" content="ShyEngineer">
+<link rel="canonical" href="https://shyengineer.github.io/posts/6th-post/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7a1c9b3f623dc2a62359feb438e65a66c66c2e7b1986cf70704648693e57ec9b.css" integrity="sha256-ehybP2I9wqYjWf60OOZaZsZsLnsZhs9wcEZIaT5X7Js=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://shyengineer.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://shyengineer.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://shyengineer.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://shyengineer.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://shyengineer.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://shyengineer.github.io/posts/6th-post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-672600DYET"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-672600DYET');
+</script>
+
+<link rel="icon" href="/favicon.ico">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<meta name="google-site-verification" content="571yNf6jh4xoCUkecpp1fEH-SQAmvqhr6pukc2cmkbY" />
+
+<meta property="og:title" content="C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!! | 개발·물리·경제 블로그" />
+<meta property="og:description" content="싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shyengineer.github.io/posts/6th-post/" />
+
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!" />
+<meta name="twitter:description" content="싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!" />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" /><meta property="og:url" content="https://shyengineer.github.io/posts/6th-post/">
+  <meta property="og:site_name" content="개발·물리·경제 블로그">
+  <meta property="og:title" content="C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!">
+  <meta property="og:description" content="싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!">
+  <meta property="og:locale" content="ko-kr">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-25T00:00:00+00:00">
+    <meta property="article:tag" content="C&#43;&#43;">
+    <meta property="article:tag" content="OOP">
+    <meta property="article:tag" content="Simulation">
+    <meta property="article:tag" content="UpdateLoop">
+    <meta property="article:tag" content="Optimization">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!">
+<meta name="twitter:description" content="싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://shyengineer.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "C++ 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!",
+      "item": "https://shyengineer.github.io/posts/6th-post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "C++ 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!",
+  "name": "C\u002b\u002b 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!",
+  "description": "싱글톤 관리자가 수많은 객체를 한 번에 처리하는 메커니즘을 배웁니다! 데이터의 연속성을 활용한 성능 최적화와 안정적인 루프 설계법을 공개합니다!!",
+  "keywords": [
+    "C++", "OOP", "Simulation", "UpdateLoop", "Optimization"
+  ],
+  "articleBody": "1. 업데이트 루프(Update Loop): 시뮬레이션의 심장박동!! 물리 시뮬레이션은 멈춰있는 사진이 아니라 흐르는 영화와 같습니다!! 관리자는 매 찰나(Frame)마다 모든 객체에게 “자, 다음 위치로 이동해!“라고 명령을 내려야 하죠. 이 반복되는 과정을 업데이트 루프라고 부릅니다!!\n보통 아래와 같은 순서로 진행돼요:\n입력 처리: 사용자나 시스템의 명령을 듣습니다. 물리 업데이트: 모든 객체의 가속도, 속도, 위치를 계산합니다. 렌더링: 계산된 결과를 화면에 그립니다. 2. 수많은 객체를 담는 그릇: std::vector!! 관리자가 객체들을 효율적으로 돌보려면 한 곳에 잘 모아두어야 합니다. C++에서 가장 사랑받는 그릇은 바로 std::vector입니다!!\n왜 std::vector일까요?\n메모리 밀집도: 데이터가 메모리상에 나란히 붙어 있어, CPU가 다음 객체를 찾을 때 속도가 빛처럼 빠릅니다!! 유연함: 새로운 입자가 태어나거나(Factory 이용), 수명이 다해 사라질 때 관리가 매우 용이합니다!! 3. 효율적인 관리자 코드 구현!! 지난번에 만든 싱글톤 PhysicsWorld에 객체 관리 기능을 추가해 봅시다!!\n#include #include #include class PhysicsWorld { private: // 관리할 입자들을 담는 벡터 (다형성 활용!!) std::vector\u003cstd::unique_ptr\u003cParticle\u003e\u003e particles; PhysicsWorld() {} PhysicsWorld(const PhysicsWorld\u0026) = delete; PhysicsWorld\u0026 operator=(const PhysicsWorld\u0026) = delete; public: static PhysicsWorld\u0026 getInstance() { static PhysicsWorld instance; return instance; } // 입자 추가 (팩토리에서 만든 객체를 전달받음!!) void addParticle(std::unique_ptr\u003cParticle\u003e p) { particles.push_back(std::move(p)); } // 핵심 업데이트 루프!! void update(double deltaTime) { // 모든 입자를 순회하며 물리 법칙 적용!! for (auto\u0026 p : particles) { p-\u003eupdate(deltaTime); } std::cout \u003c\u003c particles.size() \u003c\u003c \"개의 입자가 움직이고 있습니다!!\\n\"; } }; 4. 최적화 꿀팁: 데이터 관리의 핵심!! 객체가 많아질수록 성능이 중요해집니다!! 관리자로서 다음 두 가지를 꼭 기억하세요!!\n불필요한 객체 삭제: 화면 밖으로 나가거나 수명이 다한 입자는 바로바로 벡터에서 제거해야 합니다. 그렇지 않으면 ‘유령 객체’들이 CPU를 계속 괴롭힐 거예요!!\nReserve 활용: 벡터의 크기가 커질 때 메모리를 새로 할당하는 비용은 꽤 큽니다. 대략적인 개수를 안다면 particles.reserve(1000);으로 미리 공간을 확보하세요!!\n5. 경제 모델로의 응용: 시장의 순환!! 이 루프는 경제 시뮬레이션에서 **‘회계 연도’**나 **‘거래 주기’**가 됩니다!! 싱글톤인 Market 관리자가 모든 Agent(가계, 기업)를 순회하며 수입과 지출을 계산하고, 파산한 주체는 리스트에서 제거하며 시스템을 유지하는 것과 똑같은 원리랍니다!!\n💡 관리자의 업무를 자동화한 소감이 어떠신가요? 이제 여러분의 물리 세계는 스스로 숨 쉬며 움직일 준비가 끝났습니다!! 수천 개의 입자가 동시에 춤추는 모습, 상상만 해도 짜릿하지 않나요?\n혹시 “수만 개가 넘어가니 너무 느려져요!” 하시는 분 계신가요? 다음 시간에는 성능을 극한으로 끌어올리는 공간 분할(Spatial Partitioning) 기법에 대해 알아볼까요?\n언제든 여러분의 생각을 댓글로 들려주세요!! 함께 멋진 엔진을 완성해 봅시다!!\n",
+  "wordCount" : "353",
+  "inLanguage": "en",
+  "datePublished": "2026-01-25T00:00:00Z",
+  "dateModified": "2026-01-25T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "ShyEngineer"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://shyengineer.github.io/posts/6th-post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "개발·물리·경제 블로그",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://shyengineer.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://shyengineer.github.io/" accesskey="h" title="Shy Engineer (Alt + H)">
+                <img src="https://shyengineer.github.io/Logo.webp" alt="" aria-label="logo"
+                    height="35">Shy Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      C&#43;&#43; 물리 엔진의 심장: 효율적인 업데이트 루프와 벡터(std::vector) 관리 기술!!
+    </h1>
+    <div class="post-meta"><span title='2026-01-25 00:00:00 +0000 UTC'>January 25, 2026</span>&nbsp;·&nbsp;<span>ShyEngineer</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="1-업데이트-루프update-loop-시뮬레이션의-심장박동">1. 업데이트 루프(Update Loop): 시뮬레이션의 심장박동!!<a hidden class="anchor" aria-hidden="true" href="#1-업데이트-루프update-loop-시뮬레이션의-심장박동">#</a></h2>
+<p>물리 시뮬레이션은 멈춰있는 사진이 아니라 흐르는 영화와 같습니다!! 관리자는 매 찰나(Frame)마다 모든 객체에게 &ldquo;자, 다음 위치로 이동해!&ldquo;라고 명령을 내려야 하죠. 이 반복되는 과정을 <strong>업데이트 루프</strong>라고 부릅니다!!</p>
+<p>보통 아래와 같은 순서로 진행돼요:</p>
+<ol>
+<li><strong>입력 처리:</strong> 사용자나 시스템의 명령을 듣습니다.</li>
+<li><strong>물리 업데이트:</strong> 모든 객체의 가속도, 속도, 위치를 계산합니다.</li>
+<li><strong>렌더링:</strong> 계산된 결과를 화면에 그립니다.</li>
+</ol>
+<hr>
+<h2 id="2-수많은-객체를-담는-그릇-stdvector">2. 수많은 객체를 담는 그릇: std::vector!!<a hidden class="anchor" aria-hidden="true" href="#2-수많은-객체를-담는-그릇-stdvector">#</a></h2>
+<p>관리자가 객체들을 효율적으로 돌보려면 한 곳에 잘 모아두어야 합니다. C++에서 가장 사랑받는 그릇은 바로 <code>std::vector</code>입니다!!</p>
+<p>왜 <code>std::vector</code>일까요?</p>
+<ul>
+<li><strong>메모리 밀집도:</strong> 데이터가 메모리상에 나란히 붙어 있어, CPU가 다음 객체를 찾을 때 속도가 빛처럼 빠릅니다!!</li>
+<li><strong>유연함:</strong> 새로운 입자가 태어나거나(Factory 이용), 수명이 다해 사라질 때 관리가 매우 용이합니다!!</li>
+</ul>
+<hr>
+<h2 id="3-효율적인-관리자-코드-구현">3. 효율적인 관리자 코드 구현!!<a hidden class="anchor" aria-hidden="true" href="#3-효율적인-관리자-코드-구현">#</a></h2>
+<p>지난번에 만든 싱글톤 <code>PhysicsWorld</code>에 객체 관리 기능을 추가해 봅시다!!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;memory&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PhysicsWorld</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 관리할 입자들을 담는 벡터 (다형성 활용!!)
+</span></span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>Particle<span style="color:#f92672">&gt;&gt;</span> particles;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PhysicsWorld() {}
+</span></span><span style="display:flex;"><span>    PhysicsWorld(<span style="color:#66d9ef">const</span> PhysicsWorld<span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
+</span></span><span style="display:flex;"><span>    PhysicsWorld<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> PhysicsWorld<span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> PhysicsWorld<span style="color:#f92672">&amp;</span> getInstance() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">static</span> PhysicsWorld instance;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> instance;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 입자 추가 (팩토리에서 만든 객체를 전달받음!!)
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addParticle</span>(std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>Particle<span style="color:#f92672">&gt;</span> p) {
+</span></span><span style="display:flex;"><span>        particles.push_back(std<span style="color:#f92672">::</span>move(p));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 핵심 업데이트 루프!!
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">update</span>(<span style="color:#66d9ef">double</span> deltaTime) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 모든 입자를 순회하며 물리 법칙 적용!!
+</span></span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> p : particles) {
+</span></span><span style="display:flex;"><span>            p<span style="color:#f92672">-&gt;</span>update(deltaTime); 
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> particles.size() <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;개의 입자가 움직이고 있습니다!!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h2 id="4-최적화-꿀팁-데이터-관리의-핵심">4. 최적화 꿀팁: 데이터 관리의 핵심!!<a hidden class="anchor" aria-hidden="true" href="#4-최적화-꿀팁-데이터-관리의-핵심">#</a></h2>
+<p>객체가 많아질수록 성능이 중요해집니다!! 관리자로서 다음 두 가지를 꼭 기억하세요!!</p>
+<p>불필요한 객체 삭제: 화면 밖으로 나가거나 수명이 다한 입자는 바로바로 벡터에서 제거해야 합니다. 그렇지 않으면 &lsquo;유령 객체&rsquo;들이 CPU를 계속 괴롭힐 거예요!!</p>
+<p>Reserve 활용: 벡터의 크기가 커질 때 메모리를 새로 할당하는 비용은 꽤 큽니다. 대략적인 개수를 안다면 particles.reserve(1000);으로 미리 공간을 확보하세요!!</p>
+<h2 id="5-경제-모델로의-응용-시장의-순환">5. 경제 모델로의 응용: 시장의 순환!!<a hidden class="anchor" aria-hidden="true" href="#5-경제-모델로의-응용-시장의-순환">#</a></h2>
+<p>이 루프는 경제 시뮬레이션에서 **&lsquo;회계 연도&rsquo;**나 **&lsquo;거래 주기&rsquo;**가 됩니다!! 싱글톤인 Market 관리자가 모든 Agent(가계, 기업)를 순회하며 수입과 지출을 계산하고, 파산한 주체는 리스트에서 제거하며 시스템을 유지하는 것과 똑같은 원리랍니다!!</p>
+<p>💡 관리자의 업무를 자동화한 소감이 어떠신가요?
+이제 여러분의 물리 세계는 스스로 숨 쉬며 움직일 준비가 끝났습니다!! 수천 개의 입자가 동시에 춤추는 모습, 상상만 해도 짜릿하지 않나요?</p>
+<p>혹시 &ldquo;수만 개가 넘어가니 너무 느려져요!&rdquo; 하시는 분 계신가요? 다음 시간에는 성능을 극한으로 끌어올리는 공간 분할(Spatial Partitioning) 기법에 대해 알아볼까요?</p>
+<p>언제든 여러분의 생각을 댓글로 들려주세요!! 함께 멋진 엔진을 완성해 봅시다!!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://shyengineer.github.io/tags/c&#43;&#43;/">C&#43;&#43;</a></li>
+      <li><a href="https://shyengineer.github.io/tags/oop/">OOP</a></li>
+      <li><a href="https://shyengineer.github.io/tags/simulation/">Simulation</a></li>
+      <li><a href="https://shyengineer.github.io/tags/updateloop/">UpdateLoop</a></li>
+      <li><a href="https://shyengineer.github.io/tags/optimization/">Optimization</a></li>
+    </ul>
+  </footer>
+
+  
+  <script src="https://giscus.app/client.js"
+        data-repo="shyengineer/shyengineer.github.io"
+        data-repo-id="R_kgDOQ8g2qw"
+        data-category="[ENTER CATEGORY NAME HERE]"
+        data-category-id="[ENTER CATEGORY ID HERE]"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="ko"
+        crossorigin="anonymous"
+        async>
+</script>
+  
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://shyengineer.github.io/">개발·물리·경제 블로그</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
