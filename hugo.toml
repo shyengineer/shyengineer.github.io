@@ -65,3 +65,9 @@ theme = "PaperMod"
     [[params.socialIcons]]
         name = "email"
         url = "mailto:본인이메일@example.com"
+
+[menu]
+    [[menu.main]]
+    name = "Privacy Policy"
+    url = "/privacy-policy/"
+    weight = 50
