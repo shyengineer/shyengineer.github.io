@@ -3,6 +3,19 @@ languageCode = "ko-kr"
 title = "개발·물리·경제 블로그"
 theme = "PaperMod"
 
+# [추가] 검색 엔진 로봇이 사이트맵을 찾을 수 있게 합니다.
+enableRobotsTXT = true
+
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+baseURL = "https://shyengineer.github.io/"
+languageCode = "ko-kr"
+title = "개발·물리·경제 블로그"
+theme = "PaperMod"
+
 # 검색 기능 활성화를 위한 출력 설정
 [outputs]
     home = ["HTML", "RSS", "JSON"]
