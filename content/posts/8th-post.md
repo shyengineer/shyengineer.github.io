@@ -1,6 +1,6 @@
 ---
 title: "반도체 공정의 한계와 물리 법칙: 3나노 공정이 '꿈의 공정'이라 불리는 이유"
-date: 2026-01-27T14:10:00+09:00
+date: 2026-01-27T00:00:00+09:00
 draft: false
 math: true
 categories: ["Engineering", "Physics", "Economics"]
