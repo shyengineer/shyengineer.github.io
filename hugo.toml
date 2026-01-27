@@ -46,3 +46,6 @@ enableRobotsTXT = true #
         imageUrl = "https://github.com/shyengineer.png" # 깃허브 사진 연동
         imageWidth = 120
         imageHeight = 120
+        [[params.profileMode.buttons]]
+            name = "전체 글 보기"
+            url = "/posts/"
