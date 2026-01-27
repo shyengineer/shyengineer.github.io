@@ -43,9 +43,11 @@ enableRobotsTXT = true #
         enabled = true
         title = "ShyEngineer의 기술 저장소"
         subtitle = "C++ 기반 물리 엔진 설계 및 경제 모델링 전문가를 꿈꾸는 공간입니다."
-        imageUrl = "https://github.com/shyengineer.png" # 깃허브 사진 연동
+        imageUrl = "https://github.com/shyengineer.png"
         imageWidth = 120
         imageHeight = 120
+    
+        # 버튼 설정 (반드시 profileMode 설정값들 아래에 위치해야 합니다)
         [[params.profileMode.buttons]]
             name = "전체 글 보기"
-            url = "/posts/"
+            url = "posts" # PaperMod에서는 보통 슬래시 없이 'posts'라고 적습니다.
