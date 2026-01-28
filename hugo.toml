@@ -1,44 +1,46 @@
 baseURL = "https://shyengineer.github.io/"
 languageCode = "ko-kr"
-title = "개발·물리·경제 블로그 | ShyEngineer" # 브랜드명을 제목 뒤에 붙여 키워드 강화
+title = "ShyEngineer | 개발·물리·경제 블로그"
 theme = "PaperMod"
 
-enableRobotsTXT = true #
+# 검색 엔진 최적화(SEO)를 위한 기본 설정
+enableRobotsTXT = true
 
 [sitemap]
-  changefreq = "daily" # 주간에서 일간으로 변경하여 더 자주 수집 유도
-  priority = 0.8       # 중요도 상향
+  changefreq = "daily"
+  priority = 0.8
   filename = "sitemap.xml"
 
 [outputs]
-    home = ["HTML", "RSS", "JSON"] #
+    home = ["HTML", "RSS", "JSON"]
 
 [params]
-    # --- [심화 SEO 설정] ---
-    env = "production" # 구글이 이 사이트를 '완성본'으로 인식하게 함
-    description = "C++ 물리 시뮬레이션, 양자 역학, 그리고 계량 경제학을 탐구하는 엔지니어의 전문 기술 블로그입니다." # 키워드 보강
+    # --- [SEO & 글로벌 설정] ---
+    env = "production"
+    description = "물리학과 경제학을 공부하는 엔지니어의 기록입니다. C++, 물리 시뮬레이션, 계량 경제학을 다룹니다."
     author = "ShyEngineer"
-    keywords = ["C++", "물리엔진", "경제시뮬레이션", "GAA", "반도체공학", "OOP"] # 핵심 키워드 나열
-    
-    # --- [사용자 경험 최적화] ---
-    ShowReadingTime = true # "읽는 시간" 표시 (구글은 체류 시간 예측 지표를 좋아함)
-    ShowShareButtons = true # 소셜 공유 버튼 활성화 (사회적 신호 증가)
-    ShowCodeCopyButtons = true
-    ShowBreadCrumbs = true # 브레드크럼 활성화 (구글 봇의 이동 경로 최적화)
-    
-    # --- [소셜 메타데이터 (Open Graph)] ---
-    # 카톡이나 트위터 공유 시 나타날 대표 이미지
-    images = ["/images/thumbnail-default.png"] 
-
-    # --- [기존 설정 유지 및 보강] ---
-    math = true
+    keywords = ["C++", "물리엔진", "경제시뮬레이션", "반도체공학", "GAA"]
     googleAnalytics = "G-672600DYET"
-    ShowSearchButton = true
+    math = true # LaTeX 수식 활성화
 
+    # --- [UI/UX 최적화: SEO에 도움] ---
+    ShowReadingTime = true      # 읽는 시간 표시
+    ShowShareButtons = true     # 소셜 공유 버튼
+    ShowCodeCopyButtons = true  # 코드 복사 버튼
+    ShowBreadCrumbs = true      # 브레드크럼(경로) 표시
+    ShowSearchButton = true     # 검색 버튼 (Ctrl + /)
+
+    # --- [홈 정보 & 라벨] ---
     [params.homeInfoParams]
         Title = "공학적 사고로 세상을 해석합니다 👋"
         Content = "물리 법칙의 코드화부터 경제 시스템의 시뮬레이션까지, 깊이 있는 지식을 기록합니다."
 
+    [params.label]
+        text = "Shy Engineer"
+        icon = "/Logo.webp"
+        iconHeight = 35
+
+    # --- [프로필 모드] ---
     [params.profileMode]
         enabled = true
         title = "ShyEngineer의 기술 저장소"
@@ -46,8 +48,7 @@ enableRobotsTXT = true #
         imageUrl = "https://github.com/shyengineer.png"
         imageWidth = 120
         imageHeight = 120
-    
-        # 버튼 설정 (반드시 profileMode 설정값들 아래에 위치해야 합니다)
+
         [[params.profileMode.buttons]]
             name = "전체 글 보기"
-            url = "posts" # PaperMod에서는 보통 슬래시 없이 'posts'라고 적습니다.
+            url = "posts"
