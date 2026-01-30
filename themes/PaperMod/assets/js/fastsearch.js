@@ -1,12 +1,12 @@
 import * as params from '@params';
 
-let fuse; // holds our search engine
+let fuse; // 검색 엔진
 let resList = document.getElementById('searchResults');
 let sInput = document.getElementById('searchInput');
 let first, last, current_elem = null
 let resultsAvailable = false;
 
-// load our search index
+// 검색 인덱스 로드
 window.onload = function () {
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -14,34 +14,21 @@ window.onload = function () {
             if (xhr.status === 200) {
                 let data = JSON.parse(xhr.responseText);
                 if (data) {
-                    // fuse.js options; check fuse.js website for details
+                    // Fuse.js 옵션 설정 (태그 검색 추가 및 하이라이팅 활성화)
                     let options = {
                         distance: 100,
                         threshold: 0.4,
                         ignoreLocation: true,
+                        includeMatches: true, // 하이라이팅을 위한 매치 정보 포함
+                        minMatchCharLength: 2,
                         keys: [
                             'title',
-                            'permalink',
+                            'tags',   // 태그 검색 추가
                             'summary',
                             'content'
                         ]
                     };
-                    if (params.fuseOpts) {
-                        options = {
-                            isCaseSensitive: params.fuseOpts.iscasesensitive ?? false,
-                            includeScore: params.fuseOpts.includescore ?? false,
-                            includeMatches: params.fuseOpts.includematches ?? false,
-                            minMatchCharLength: params.fuseOpts.minmatchcharlength ?? 1,
-                            shouldSort: params.fuseOpts.shouldsort ?? true,
-                            findAllMatches: params.fuseOpts.findallmatches ?? false,
-                            keys: params.fuseOpts.keys ?? ['title', 'permalink', 'summary', 'content'],
-                            location: params.fuseOpts.location ?? 0,
-                            threshold: params.fuseOpts.threshold ?? 0.4,
-                            distance: params.fuseOpts.distance ?? 100,
-                            ignoreLocation: params.fuseOpts.ignorelocation ?? true
-                        }
-                    }
-                    fuse = new Fuse(data, options); // build the index from the json file
+                    fuse = new Fuse(data, options); 
                 }
             } else {
                 console.log(xhr.responseText);
@@ -52,9 +39,25 @@ window.onload = function () {
     xhr.send();
 }
 
+// 하이라이트 처리 함수
+function highlightText(text, indices) {
+    if (!indices || indices.length === 0) return text;
+    
+    let result = '';
+    let lastIndex = 0;
+    
+    indices.forEach(([start, end]) => {
+        result += text.substring(lastIndex, start);
+        result += `<mark>${text.substring(start, end + 1)}</mark>`; // <mark> 태그로 감싸기
+        lastIndex = end + 1;
+    });
+    
+    result += text.substring(lastIndex);
+    return result;
+}
+
 function activeToggle(ae) {
     document.querySelectorAll('.focus').forEach(function (element) {
-        // rm focus class
         element.classList.remove("focus")
     });
     if (ae) {
@@ -68,28 +71,37 @@ function activeToggle(ae) {
 
 function reset() {
     resultsAvailable = false;
-    resList.innerHTML = sInput.value = ''; // clear inputbox and searchResults
-    sInput.focus(); // shift focus to input box
+    resList.innerHTML = sInput.value = ''; 
+    sInput.focus(); 
 }
 
-// execute search as each character is typed
+// 검색 실행 로직
 sInput.onkeyup = function (e) {
-    // run a search query (for "term") every time a letter is typed
-    // in the search box
     if (fuse) {
-        let results;
-        if (params.fuseOpts) {
-            results = fuse.search(this.value.trim(), {limit: params.fuseOpts.limit}); // the actual query being run using fuse.js along with options
-        } else {
-            results = fuse.search(this.value.trim()); // the actual query being run using fuse.js
-        }
+        let results = fuse.search(this.value.trim()); 
+        
         if (results.length !== 0) {
-            // build our html if result exists
-            let resultSet = ''; // our results bucket
+            let resultSet = ''; 
 
             for (let item in results) {
-                resultSet += `<li class="post-entry"><header class="entry-header">${results[item].item.title}&nbsp;»</header>` +
-                    `<a href="${results[item].item.permalink}" aria-label="${results[item].item.title}"></a></li>`
+                let post = results[item].item;
+                let matches = results[item].matches;
+                
+                // 제목 하이라이팅 처리
+                let titleMatch = matches.find(m => m.key === 'title');
+                let displayTitle = titleMatch ? highlightText(post.title, titleMatch.indices) : post.title;
+
+                // 태그 표시 로직
+                let tagsHtml = '';
+                if(post.tags && post.tags.length > 0){
+                    tagsHtml = `<div style="font-size: 0.8rem; color: var(--secondary); margin-top: 5px;">🏷️ ${post.tags.join(', ')}</div>`;
+                }
+
+                resultSet += `<li class="post-entry" style="padding: 10px; margin-bottom: 5px;">` +
+                             `<header class="entry-header" style="font-weight: bold;">${displayTitle}&nbsp;»</header>` +
+                             `${tagsHtml}` +
+                             `<a href="${post.permalink}" aria-label="${post.title}"></a>` +
+                             `</li>`;
             }
 
             resList.innerHTML = resultSet;
@@ -104,22 +116,17 @@ sInput.onkeyup = function (e) {
 }
 
 sInput.addEventListener('search', function (e) {
-    // clicked on x
     if (!this.value) reset()
 })
 
-// kb bindings
 document.onkeydown = function (e) {
     let key = e.key;
     let ae = document.activeElement;
-
     let inbox = document.getElementById("searchbox").contains(ae)
 
     if (ae === sInput) {
         let elements = document.getElementsByClassName('focus');
-        while (elements.length > 0) {
-            elements[0].classList.remove('focus');
-        }
+        while (elements.length > 0) elements[0].classList.remove('focus');
     } else if (current_elem) ae = current_elem;
 
     if (key === "Escape") {
@@ -128,25 +135,13 @@ document.onkeydown = function (e) {
         return
     } else if (key === "ArrowDown") {
         e.preventDefault();
-        if (ae == sInput) {
-            // if the currently focused element is the search input, focus the <a> of first <li>
-            activeToggle(resList.firstChild.lastChild);
-        } else if (ae.parentElement != last) {
-            // if the currently focused element's parent is last, do nothing
-            // otherwise select the next search result
-            activeToggle(ae.parentElement.nextSibling.lastChild);
-        }
+        if (ae == sInput) activeToggle(resList.firstChild.lastChild);
+        else if (ae.parentElement != last) activeToggle(ae.parentElement.nextSibling.lastChild);
     } else if (key === "ArrowUp") {
         e.preventDefault();
-        if (ae.parentElement == first) {
-            // if the currently focused element is first item, go to input box
-            activeToggle(sInput);
-        } else if (ae != sInput) {
-            // if the currently focused element is input box, do nothing
-            // otherwise select the previous search result
-            activeToggle(ae.parentElement.previousSibling.lastChild);
-        }
+        if (ae.parentElement == first) activeToggle(sInput);
+        else if (ae != sInput) activeToggle(ae.parentElement.previousSibling.lastChild);
     } else if (key === "ArrowRight") {
-        ae.click(); // click on active link
+        ae.click();
     }
 }

@@ -42,6 +42,28 @@
   </div>
   {{- end }}
 
+  {{/* --- [Related Posts Widget Start] --- */}}
+  {{ $related := .Site.RegularPages.Related . | first 3 }}
+  {{ with $related }}
+  <div class="related-posts" style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">
+    <h3 style="margin-bottom: 15px;">🔍 함께 읽으면 좋은 글</h3>
+    <ul style="list-style: none; padding: 0;">
+      {{ range . }}
+      <li style="margin-bottom: 10px;">
+        <a href="{{ .RelPermalink }}" style="text-decoration: none; font-size: 1.1em; font-weight: 500;">
+          👉 {{ .Title }}
+        </a>
+        <div style="font-size: 0.9em; color: var(--secondary); margin-left: 25px;">
+          {{ .Summary | truncate 80 }}
+        </div>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+  {{ end }}
+  {{/* --- [Related Posts Widget End] --- */}}
+
+
   <footer class="post-footer">
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">

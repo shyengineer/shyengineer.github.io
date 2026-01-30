@@ -52,3 +52,19 @@ enableRobotsTXT = true
         [[params.profileMode.buttons]]
             name = "전체 글 보기"
             url = "posts"
+[related]
+  includeNewer = true
+  threshold = 80  # 점수가 80점 이상인 글만 추천 (조절 가능)
+  toLower = false
+
+    [[related.indices]]
+        name = "tags"
+        weight = 100  # 태그 일치 시 가장 높은 가중치
+
+    [[related.indices]]
+        name = "categories"
+        weight = 50   # 카테고리는 보조 가중치
+
+    [[related.indices]]
+        name = "date"
+        weight = 10   # 최신글 가산점
