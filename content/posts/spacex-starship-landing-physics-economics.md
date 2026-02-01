@@ -1,6 +1,6 @@
 ---
 title: "SpaceX 스타십의 물리학: '젓가락 팔' 착륙과 발사 비용의 경제학"
-date: 2026-02-02T09:00:00+09:00
+date: 2026-02-01T09:00:00+09:00
 draft: false
 math: true
 categories: ["Engineering", "Physics", "Economics"]
