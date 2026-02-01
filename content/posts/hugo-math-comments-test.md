@@ -1,6 +1,7 @@
 ---
 title: "수식과 댓글 테스트"
 date: 2026-01-19
+draft: true
 math: true      # 수식 엔진을 켭니다
 comments: true  # 댓글창을 켭니다
 ---
