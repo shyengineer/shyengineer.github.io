@@ -47,6 +47,7 @@ enableRobotsTXT = true
     keywords = ["C++", "물리엔진", "경제시뮬레이션", "반도체공학", "GAA"]
     googleAnalytics = "G-672600DYET"
     math = true # LaTeX 수식 활성화
+    copyright = "Copyright © 2026 ShyEngineer. All Rights Reserved."
 
     # --- [UI/UX 최적화: SEO에 도움] ---
     ShowReadingTime = true      # 읽는 시간 표시
