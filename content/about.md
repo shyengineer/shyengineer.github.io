@@ -42,7 +42,5 @@ draft: false
 궁금한 점이 있거나 흥미로운 논문을 추천해주고 싶으시다면 언제든 연락해 주세요!
 
 * **GitHub**: [https://github.com/shyengineer](https://github.com/shyengineer)
-* **Email**: `hugo.toml에 설정한 주인님의 이메일 주소`
-
 ---
 **ShyEngineer**
