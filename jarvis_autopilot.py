@@ -105,10 +105,15 @@ def extract_image_prompt(content):
     return match.group(1) if match else "Futuristic high tech background, 8k"
 
 def generate_and_save_webp(prompt, filename_base):
-    log("이미지 생성 요청 중...")
+    log(f"이미지 생성 요청 중...")
+    
+    # [수정] 모델 이름을 사용 가능한 모델로 변경
+    # 사용자 목록에 있던 'gemini-2.0-flash-exp' 사용
+    image_model = 'gemini-2.0-flash-exp' 
+    
     try:
         response = client.models.generate_images(
-            model='imagen-3.0-generate-001',
+            model=image_model,
             prompt=prompt,
             config=types.GenerateImagesConfig(
                 number_of_images=1,
@@ -116,6 +121,7 @@ def generate_and_save_webp(prompt, filename_base):
                 output_mime_type="image/png"
             )
         )
+        
         for generated_image in response.generated_images:
             image_bytes = generated_image.image.image_bytes
             img = Image.open(BytesIO(image_bytes))
@@ -124,10 +130,11 @@ def generate_and_save_webp(prompt, filename_base):
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
             
             img.save(save_path, "webp", quality=80)
-            log(f"✅ 이미지 저장: {save_path}")
+            log(f"✅ 이미지 저장 완료: {save_path}")
             return f"/images/{filename_base}.webp"
+            
     except Exception as e:
-        log(f"⚠️ 이미지 생성 실패: {e}")
+        log(f"⚠️ 이미지 생성 실패 (건너뜀): {e}")
         return None
 
 def save_file_and_deploy(topic, content, image_rel_path):
