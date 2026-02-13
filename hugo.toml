@@ -5,9 +5,7 @@ theme = "PaperMod"
 
 # 검색 엔진 최적화(SEO)를 위한 기본 설정
 enableRobotsTXT = true
-User-agent: *
-Allow: /
-Sitemap: https://shyengineer.github.io/sitemap.xml
+
 
 [sitemap]
   changefreq = "daily"
